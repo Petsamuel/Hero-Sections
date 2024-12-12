@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-// import SwiperCore, { keyboard } from "swiper";
+
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/keyboard";
