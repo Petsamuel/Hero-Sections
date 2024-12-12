@@ -3,10 +3,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/keyboard";
-// import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/thumbs";
-// import "swiper/css/scrollbar";
 import img1 from "../assets/image/1.png";
 import img2 from "../assets/image/2.png";
 import img3 from "../assets/image/3.png";
@@ -18,16 +16,24 @@ import {
   Mousewheel,
   Thumbs,
 } from "swiper/modules";
-import { useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Swiper as SwiperInstance } from "swiper";
+import { BoxReveal } from "./Reveal";
 
 export const Hero = () => {
   const Images = [img1, img2, img3, img5];
-  const Social = ["TW", "IN", "GH", "FB"];
+  const Socials = [
+    { name: "TW", link: "https://twitter.com/bieefilled" },
+    { name: "IN", link: "https://linkedin.com/in/bieefilled" },
+    { name: "GH", link: "https://github.com/petsamuel" },
+    { name: "FB", link: "#" },
+  ];
   const [Active, setActive] = useState(0);
-  const swiperRef = useRef<SwiperInstance | null>(null);
   const [thumbSwiper, setThumbSwiper] = useState<SwiperInstance | null>(null);
-  console.log("test:", thumbSwiper);
+  console.log(thumbSwiper?.activeIndex);
+
+  useEffect(() => {}, [Active]);
+
   return (
     <div>
       <Swiper
@@ -54,13 +60,13 @@ export const Hero = () => {
         }}
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
-        onSwiper={setThumbSwiper}
-        className="w-full h-screen overflow-hidden"
+        onSwiper={(swiper) => console.log(swiper.activeIndex)}
+        className="w-full h-screen overflow-hidden relative"
       >
         {Images.map((img, index) => (
           <SwiperSlide key={index}>
             <div
-              className={`text-white  relative flex lg:flex-row flex-col items-center justify-center ${
+              className={`text-white ${
                 index === 0
                   ? "bg-gradient-to-b from-[#FE783D] to-[#121826]"
                   : index === 1
@@ -68,161 +74,234 @@ export const Hero = () => {
                   : index === 2
                   ? "bg-gradient-to-b from-[#DAB1C8] to-[#511990]"
                   : "bg-gradient-to-b from-[#d9c5bf] to-[#0b273f]"
-              } bg-white lg:text-xl w-full`}
+              } bg-white lg:text-xl`}
             >
-              <div className="info lg:relative flex flex-col gap-1 absolute lg:top-0 top-[40dvh]  z-20">
-                {/* page navigation */}
-                <div className="absolute text-[5.1rem] top-[4.5rem] start-[-23rem] rotate-90 flex gap-8 z-20">
-                  {["o", "o", "o", "o"].map((val: string, index: number) => (
+              <div className="relative overflow-hidden h-screen w-screen">
+                {/* wrapper */}
+                <div className="flex relative lg:flex-row flex-col items-center justify-center lg:ml-[12rem] ml-[6.5rem] lg:w-fit w-screen p-4">
+                  <div
+                    className={` lg:relative flex flex-col gap-1 absolute lg:top-0 top-[20dvh]  z-20 w-full items-start mt-[3rem] lg:mt-0 `}
+                  >
                     <div
-                      key={index}
-                      className="font-['ozda'] tracking-[1rem] cursor-pointer "
-                      onClick={() => {
-                        setActive(index);
-                        const swiper = thumbSwiper;
-                        if (swiper) {
-                          swiper.slideTo(index);
-                        }
-                        if (swiperRef.current) {
-                          swiperRef.current.slideTo(index);
-                        }
-                      }}
+                      className={`absolute rotate-90 lg:flex gap-16 z-20  start-[-25rem] top-[10dvh] text-white font-['ozda'] text-[5rem] hidden `}
                     >
-                      <p
-                        className={`${
-                          index === Active ? "hover:shadow-2xl" : ""
-                        }`}
-                      >
-                        {val}
-                      </p>
+                      {["o", "o", "o", "o"].map(
+                        (val: string, index: number) => (
+                          <div
+                            key={index}
+                            className="font-['ozda'] tracking-[1rem] cursor-pointer"
+                            onClick={() => {
+                              const slideResult = thumbSwiper?.slideTo(index);
+                              if (slideResult !== undefined) {
+                                setActive(index);
+                              }
+                            }}
+                          >
+                            <p
+                              className={`${
+                                thumbSwiper?.activeIndex === index
+                                  ? "text-white"
+                                  : "text-[#ffff]"
+                              }`}
+                            >
+                              {val}
+                            </p>
+                          </div>
+                        )
+                      )}
                     </div>
-                  ))}
-                </div>
-                {/* brand name */}
-                <div className="absolute text-[5.1rem] lg:top-[8rem] top-[5rem] rotate-90 start-[-24rem] font-['ozda'] tracking-[1rem] font-extrabold">
-                  POSSESSD
-                </div>
-                <p className="font-extrabold lg:text-2xl md:text-lg z-20 w-[20rem]">
-                  {index === 0
-                    ? "Elevate Your Style Game."
-                    : index === 1
-                    ? "Master the Art of Adventure."
-                    : "Redefine Modern Sophistication."}
-                </p>
 
-                <p>
-                  Where innovation meets <br /> technical perfection.
-                </p>
+                    {/* brand name */}
+                    <div className="absolute text-[5.1rem] lg:md:top-[8rem] top-[10rem] rotate-90 start-[-24rem] font-['ozda'] tracking-[1rem] font-extrabold">
+                      POSSESSD
+                    </div>
+                    <BoxReveal
+                      boxColor={
+                        index === 0
+                          ? "ac6e59"
+                          : index === 1
+                          ? "#385c85"
+                          : index === 2
+                          ? "#7e53af"
+                          : "#ca7683"
+                      }
+                      duration={0.5}
+                    >
+                      <p className="font-extrabold lg:text-4xl text-xl z-20 lg:w-[20rem] w-[15rem] text-pretty">
+                        {index === 0
+                          ? "Elevate Your Style Game."
+                          : index === 1
+                          ? "Master the Art of Adventure."
+                          : "Redefine Modern Sophistication."}
+                      </p>
+                    </BoxReveal>
 
-                <br />
-                <p className="z-20">
-                  Bold, modern, <br /> and technical
-                </p>
-                <div className="absolute text-sm bottom-[-30dvh] flex gap-4">
-                  {Social.map((val, index) => (
-                    <div key={index} className="flex gap-4 z-20">
-                      <div className="cursor-pointer hover:underline-offset-8">
-                        {val}
+                    <div className="z-20  lg:block lg:text-lg text-sm">
+                      <BoxReveal
+                        duration={0.5}
+                        boxColor={
+                          index === 0
+                            ? "#61200a"
+                            : index === 1
+                            ? "#041325"
+                            : index === 2
+                            ? "#310b5c"
+                            : "#562330"
+                        }
+                      >
+                        <p>
+                          Where innovation meets <br /> technical perfection.
+                        </p>
+                      </BoxReveal>
+
+                      <br />
+                      <BoxReveal
+                        duration={0.5}
+                        boxColor={
+                          index === 0
+                            ? "#61200a"
+                            : index === 1
+                            ? "#041325"
+                            : index === 2
+                            ? "#310b5c"
+                            : "#562330"
+                        }
+                      >
+                        <p className="text-sm">
+                          Bold, modern, <br /> and technical
+                        </p>
+                      </BoxReveal>
+                    </div>
+
+                    <div className="absolute text-sm lg:bottom-[-30dvh] bottom-[-30em] flex gap-4 lg:w-[80dvw] w-[60dvw] justify-between">
+                      <div className="flex justify-between w-fit gap-4">
+                        {Socials.map((val, index) => (
+                          <div key={index} className="flex gap-4 z-20">
+                            <a
+                              className="cursor-pointer hover:underline-offset-8"
+                              href={val.link}
+                            >
+                              {val.name}
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="end-0 ">
+                        <a
+                          className="cursor-pointer hover:underline underline-offset-8"
+                          href="http://github.com/bieefilled"
+                        >
+                          Privacy
+                        </a>
                       </div>
                     </div>
-                  ))}
-                </div>
+                    <span className="absolute  h-full w-full inset-0  [mask-size:40px] [mask-repeat:no-repeat] flex items-center justify-center" />
+                  </div>
 
-                <span className="absolute  h-full w-full inset-0  [mask-size:40px] [mask-repeat:no-repeat] flex items-center justify-center" />
-              </div>
+                  <div className="lg:mx-[5rem] relative text-center lg:z-20 basis-[90dvw]">
+                    <img
+                      src={img}
+                      alt="img"
+                      className="h-screen object-cover lg:z-10  w-[100dvw]"
+                    />
+                  </div>
 
-              <div className="lg:mx-[5rem] relative text-center lg:z-20">
-                <img
-                  src={img}
-                  alt="img"
-                  className="h-screen object-cover lg:z-10 w-full"
-                />
-                {/* thumbnail swiper */}
-                <div className="absolute bottom-[8.5rem] w-[16rem] end-[-2.8em]">
-                  {" "}
-                  <Swiper
-                    modules={[Thumbs]}
-                    onSwiper={(swiper) => setThumbSwiper(swiper)}
-                    spaceBetween={0}
-                    slidesPerView={2}
-                    watchSlidesProgress={true}
-                    slideToClickedSlide={true}
-                    speed={800}
-                    loop={true}
-                    className="flex"
-                  >
-                    {Images.map((val, index) => (
-                      <SwiperSlide key={index}>
-                        <img
-                          src={val}
-                          alt={`thumbs${index + 1}`}
-                          className={`w-[8rem] h-[4rem] ${
+                  <div className="flex  flex-col z-30 w-full absolute lg:md:relative mt-[10rem] lg:mt-0 lg:mr-[90px]">
+                    <div className="flex justify-between flex-col lg:space-y-8">
+                      <div className="py-4">
+                        <p className="lg:md:text-lg text-sm">Color:</p>
+                        <p className="text-lg font-semibold">
+                          {" "}
+                          {index === 0
+                            ? "Blood Orange"
+                            : index === 1
+                            ? "Blue"
+                            : index === 2
+                            ? "PurpleHare"
+                            : "Marshmello Pink"}
+                        </p>
+                      </div>
+
+                      <div className="font-semibold z-10 lg:text-2xl flex lg:flex-row flex-col-reverse gap-2 items-baseline tracking-tighter leading-tight">
+                        <p className="lg:md:text-lg text-sm">
+                          {" "}
+                          iD: xxxxx{index + 1}
+                        </p>
+                        <span className="text-4xl font-bold">$1,249.00</span>
+                      </div>
+                      <div className="flex w-fit lg:w-full z-10 justify-end mt-6">
+                        <div className="">
+                          <input
+                            type="button"
+                            value=" Buy Now"
+                            className={`${
+                              index === 0
+                                ? "bg-[#ac6e59]"
+                                : index === 1
+                                ? "bg-[#385c85]"
+                                : index === 2
+                                ? "bg-[#7e53af]"
+                                : "bg-[#ca7683]"
+                            } w-full p-4 cursor-pointer `}
+                          />
+                        </div>
+
+                        <input
+                          type="button"
+                          value="Add To Cart"
+                          className={` hover:bg-[#fff] hover:text-black ${
                             index === 0
-                              ? "bg-gradient-to-b from-[#FE783D] to-[#121826]"
+                              ? "bg-[#61200a]"
                               : index === 1
-                              ? " bg-gradient-to-b from-[#00499D] to-[#121826]"
+                              ? "bg-[#041325]"
                               : index === 2
-                              ? "bg-gradient-to-b from-[#DAB1C8] to-[#511990]"
-                              : "bg-gradient-to-b from-[#d9c5bf] to-[#0b273f]"
-                          } object-contain`}
+                              ? "bg-[#310b5c]"
+                              : "bg-[#562330]"
+                          } p-4 w-full cursor-pointer`}
                         />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-              </div>
-              <div className="flex space-y-8 flex-col z-10">
-                <div>
-                  <p>Color:</p>
-                  <span>
-                    {" "}
-                    {index === 0
-                      ? "Blood Orange"
-                      : index === 1
-                      ? "Blue"
-                      : index === 2
-                      ? "PurpleHare"
-                      : "Marshmello Pink"}
-                  </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <h3 className="font-semibold z-10">$1249.00</h3>
-                <div className="flex w-full z-10">
-                  <input
-                    type="button"
-                    value=" Buy Now"
-                    className={`${
-                      index === 0
-                        ? "bg-[#ac6e59]"
-                        : index === 1
-                        ? "bg-[#385c85]"
-                        : index === 2
-                        ? "bg-[#7e53af]"
-                        : "bg-[#ca7683]"
-                    } w-full p-4 cursor-pointer`}
-                  />
-
-                  <input
-                    type="button"
-                    value="Add To Cart"
-                    className={`${
-                      index === 0
-                        ? "bg-[#61200a]"
-                        : index === 1
-                        ? "bg-[#041325]"
-                        : index === 2
-                        ? "bg-[#310b5c]"
-                        : "bg-[#562330]"
-                    } p-4 w-full cursor-pointer`}
-                  />
-                </div>
-                <div className="absolute text-sm bottom-[6dvh] end-[8rem] ">
-                  <p className="cursor-pointer hover:underline underline-offset-8">
-                    Privacy
+                <div className="z-50 mt-[-8dvh] ">
+                  <p className="text-[35rem] start font-bold text-slate-900  ">
+                    Bieefilled
                   </p>
                 </div>
               </div>
             </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      {/* thumbNail design */}
+      <Swiper
+        modules={[Thumbs, Mousewheel]}
+        onSwiper={setThumbSwiper}
+        spaceBetween={0}
+        slidesPerView={2}
+        mousewheel={true}
+        watchSlidesProgress={true}
+        slideToClickedSlide={true}
+        speed={800}
+        loop={true}
+        className="lg:md:flex absolute top-[75dvh]  inset-0 lg:right-[-25dvw] right-[-30ddvw] w-[16rem] hidden"
+      >
+        {Images.map((val, index) => (
+          <SwiperSlide key={index}>
+            <img
+              src={val}
+              alt={`thumbs${index + 1}`}
+              className={`w-[8rem] h-[4rem] ${
+                index === 0
+                  ? "bg-gradient-to-b from-[#FE783D] to-[#121826]"
+                  : index === 1
+                  ? " bg-gradient-to-b from-[#00499D] to-[#121826]"
+                  : index === 2
+                  ? "bg-gradient-to-b from-[#DAB1C8] to-[#511990]"
+                  : "bg-gradient-to-b from-[#d9c5bf] to-[#0b273f]"
+              } object-contain`}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

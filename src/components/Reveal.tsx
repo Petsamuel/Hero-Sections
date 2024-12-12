@@ -1,7 +1,5 @@
-
-
 import { useEffect, useRef } from "react";
-import { motion, useAnimation, useInView,  } from "framer-motion";
+import { motion, useAnimation, useInView } from "framer-motion";
 
 interface BoxRevealProps {
   children: JSX.Element;
@@ -20,7 +18,7 @@ export const BoxReveal = ({
   const slideControls = useAnimation();
 
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: false });
 
   useEffect(() => {
     if (isInView) {
@@ -67,5 +65,3 @@ export const BoxReveal = ({
     </div>
   );
 };
-
-
