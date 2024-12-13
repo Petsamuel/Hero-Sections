@@ -20,6 +20,7 @@ export const Header = () => {
     </div>,
   ];
   const [menuState, setMenuState] = useState(true);
+  const [active, setActive]=useState(0)
 
   return (
     <>
@@ -48,9 +49,13 @@ export const Header = () => {
                   {menu.map((item, index) => (
                     <div
                       key={index}
-                      className={`mx-2 hover:underline lg:underline-offset-8 lg:py-0 p-4 mt-[3rem] lg:mt-0 text-start lg:text-center hover:lg:bg-transparent  hover:bg-white hover:lg:text-white hover:text-black w-full {}`}
+                      className={`${active === index && "underline underline-offset-8"} mx-2 hover:underline lg:underline-offset-8 lg:py-0 p-4 mt-[3rem] lg:mt-0 text-start lg:text-center hover:lg:bg-transparent  hover:bg-white hover:lg:text-white hover:text-black w-full {}`}
                     >
-                      <a href={`/${item}`} className={`z-auto`}>
+                      <a
+                        href={`/${item}`}
+                        className={`z-auto`}
+                        onClick={() => setActive(index)}
+                      >
                         {item}
                       </a>
                     </div>

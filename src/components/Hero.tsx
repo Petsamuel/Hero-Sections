@@ -16,10 +16,10 @@ import {
   Mousewheel,
   Thumbs,
 } from "swiper/modules";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Swiper as SwiperInstance } from "swiper";
 import { BoxReveal } from "./Reveal";
-
+import { motion } from "framer-motion";
 export const Hero = () => {
   const Images = [img1, img2, img3, img5];
   const Socials = [
@@ -28,11 +28,7 @@ export const Hero = () => {
     { name: "GH", link: "https://github.com/petsamuel" },
     { name: "FB", link: "#" },
   ];
-  const [Active, setActive] = useState(0);
   const [thumbSwiper, setThumbSwiper] = useState<SwiperInstance | null>(null);
-  console.log(thumbSwiper?.activeIndex);
-
-  useEffect(() => {}, [Active]);
 
   return (
     <div>
@@ -54,10 +50,6 @@ export const Hero = () => {
         }}
         thumbs={{ swiper: thumbSwiper }}
         slidesPerView={1}
-        navigation={{
-          nextEl: "",
-          prevEl: "",
-        }}
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
         onSwiper={(swiper) => console.log(swiper.activeIndex)}
@@ -82,38 +74,56 @@ export const Hero = () => {
                   <div
                     className={` lg:relative flex flex-col gap-1 absolute lg:top-0 top-[20dvh]  z-20 w-full items-start mt-[3rem] lg:mt-0 `}
                   >
-                    <div
-                      className={`absolute rotate-90 lg:flex gap-16 z-20  start-[-25rem] top-[10dvh] text-white font-['ozda'] text-[5rem] hidden `}
-                    >
-                      {["o", "o", "o", "o"].map(
-                        (val: string, index: number) => (
-                          <div
-                            key={index}
-                            className="font-['ozda'] tracking-[1rem] cursor-pointer"
-                            onClick={() => {
-                              const slideResult = thumbSwiper?.slideTo(index);
-                              if (slideResult !== undefined) {
-                                setActive(index);
-                              }
-                            }}
-                          >
-                            <p
-                              className={`${
-                                thumbSwiper?.activeIndex === index
-                                  ? "text-white"
-                                  : "text-[#ffff]"
-                              }`}
-                            >
-                              {val}
-                            </p>
-                          </div>
-                        )
-                      )}
-                    </div>
-
-                    {/* brand name */}
-                    <div className="absolute text-[5.1rem] lg:md:top-[8rem] top-[10rem] rotate-90 start-[-24rem] font-['ozda'] tracking-[1rem] font-extrabold">
-                      POSSESSD
+                    <div className="relative">
+                      <motion.div
+                        initial={{ opacity: 0.5, x: -100 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{
+                          delay: 0.3,
+                          duration: 0.8,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <div
+                          className={`absolute rotate-90 lg:flex gap-16 z-20  start-[-25rem] top-[10dvh] text-white font-['ozda'] text-[5rem] hidden `}
+                        >
+                          {["o", "o", "o", "o"].map(
+                            (val: string, indexs: number) => (
+                              <div
+                                key={indexs}
+                                className="font-['ozda'] tracking-[1rem] cursor-pointer"
+                                //   onClick={
+                                //     () => {
+                                //     const slideResult = thumbSwiper?.slideTo(index);
+                                //     if (slideResult !== undefined) {
+                                //       setActive(index);
+                                //     }
+                                //   }
+                                // }
+                              >
+                                <p
+                                  className={`${
+                                    indexs === index
+                                      ? "text-white opacity-100"
+                                      : "opacity-25 "
+                                  }`}
+                                >
+                                  {val}
+                                </p>
+                              </div>
+                            )
+                          )}
+                        </div>
+                        <div className="absolute text-[5.1rem] lg:md:top-[8rem] top-[10rem] rotate-90 start-[-24rem] font-['ozda'] tracking-[1rem] font-extrabold">
+                          {index === 0
+                            ? "POSSESSD"
+                            : index === 1
+                            ? "PERPLEXD"
+                            : index === 2
+                            ? "PRESSURD"
+                            : "PROPELLD"}
+                        </div>
+                      </motion.div>
                     </div>
                     <BoxReveal
                       boxColor={
@@ -198,15 +208,15 @@ export const Hero = () => {
                     <span className="absolute  h-full w-full inset-0  [mask-size:40px] [mask-repeat:no-repeat] flex items-center justify-center" />
                   </div>
 
-                  <div className="lg:mx-[5rem] relative text-center lg:z-20 basis-[90dvw]">
+                  <div className=" relative text-center lg:z-20 basis-[90dvw]">
                     <img
                       src={img}
                       alt="img"
-                      className="h-screen object-cover lg:z-10  w-[100dvw]"
+                      className="h-screen  lg:z-10  w-[100dvw]"
                     />
                   </div>
 
-                  <div className="flex  flex-col z-30 w-full absolute lg:md:relative mt-[10rem] lg:mt-0 lg:mr-[90px]">
+                  <div className="flex  flex-col z-30 w-full absolute lg:md:relative mt-[10rem] lg:mt-[-15rem] lg:mr-[90px]">
                     <div className="flex justify-between flex-col lg:space-y-8">
                       <div className="py-4">
                         <p className="lg:md:text-lg text-sm">Color:</p>
@@ -236,20 +246,20 @@ export const Hero = () => {
                             value=" Buy Now"
                             className={`${
                               index === 0
-                                ? "bg-[#ac6e59]"
+                                ? "bg-[#ac6e59] hover:scale-105"
                                 : index === 1
                                 ? "bg-[#385c85]"
                                 : index === 2
                                 ? "bg-[#7e53af]"
                                 : "bg-[#ca7683]"
-                            } w-full p-4 cursor-pointer `}
+                            } w-full p-4 cursor-pointer hover:scale-105`}
                           />
                         </div>
 
                         <input
                           type="button"
                           value="Add To Cart"
-                          className={` hover:bg-[#fff] hover:text-black ${
+                          className={` hover:bg-slate-200 hover:text-black ${
                             index === 0
                               ? "bg-[#61200a]"
                               : index === 1
@@ -265,7 +275,9 @@ export const Hero = () => {
                 </div>
 
                 <div className="z-50 mt-[-8dvh] ">
-                  <p className="text-[35rem] start font-bold text-slate-900  ">
+                  <p
+                    className={`text-[35rem] start font-bold text-gray-900  text-opacity-25 `}
+                  >
                     Bieefilled
                   </p>
                 </div>
